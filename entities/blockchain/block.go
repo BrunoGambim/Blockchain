@@ -1,4 +1,4 @@
-package entities
+package blockchain
 
 import (
 	"bytes"
@@ -17,11 +17,15 @@ func (block *Block) DeriveHash() {
 	block.Hash = hash[:]
 }
 
-func (block *Block) CreateBlock(data string, prevHash []byte) *Block {
+func CreateBlock(data string, prevHash []byte) *Block {
 	newBlock := &Block{
 		PrevHash: prevHash,
 		Data:     []byte(data),
 	}
 	newBlock.DeriveHash()
-	return block
+	return newBlock
+}
+
+func Genesis() *Block {
+	return CreateBlock("Genesis", []byte{})
 }
