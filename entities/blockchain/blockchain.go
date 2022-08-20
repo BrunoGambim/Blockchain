@@ -1,18 +1,18 @@
 package blockchain
 
 type Blockchain struct {
-	blocks []*Block
+	Blocks []*Block
 }
 
 func (chain *Blockchain) AddBlock(data string) {
-	prevBlock := chain.blocks[len(chain.blocks)-1]
+	prevBlock := chain.Blocks[len(chain.Blocks)-1]
 	newBlock := CreateBlock(data, prevBlock.Hash)
-	chain.blocks = append(chain.blocks, newBlock)
+	chain.Blocks = append(chain.Blocks, newBlock)
 }
 
 func InitBlockchain() *Blockchain {
 	return &Blockchain{
-		blocks: []*Block{
+		Blocks: []*Block{
 			Genesis(),
 		},
 	}
