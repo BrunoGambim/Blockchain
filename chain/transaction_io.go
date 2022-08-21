@@ -1,19 +1,40 @@
 package blockchain
 
+import (
+	"bytes"
+
+	"gambim.com/blockchain/wallet"
+)
+
 type TxOutput struct {
-	Value     int
-	PublicKey string
+	Value         int
+	PublicKeyHash []byte
 }
 type TxInput struct {
 	ID          []byte
 	OutputIndex int
-	Signature   string
+	Signature   []byte
+	PublicKey   []byte
 }
 
-func (input *TxInput) CanUnlock(data string) bool {
-	return input.Signature == data
+func (input *TxInput) UsesKey(publicKeyHash []byte) bool {
+	lockingHash := wallet.PublicKeyHash(input.PublicKey)
+
+	return bytes.Compare(lockingHash, publicKeyHash) == 0
 }
 
-func (output *TxOutput) CanBeUnlocked(data string) bool {
-	return output.PublicKey == data
+func (output *TxOutput) Lock(address []byte) {
+	publicKeyFullHash := wallet.Base58Decode(address)
+	publicKeyHash := publicKeyFullHash[1 : len(publicKeyFullHash)-wallet.GetChecksumLength()]
+	output.PublicKeyHash = publicKeyHash
+}
+
+func (output *TxOutput) IsLockedWithKey(publicHashKey []byte) bool {
+	return bytes.Compare(output.PublicKeyHash, publicHashKey) == 0
+}
+
+func NewTransactionOutput(value int, address string) *TxOutput {
+	transactionOutput := &TxOutput{Value: value}
+	transactionOutput.Lock([]byte(address))
+	return transactionOutput
 }

@@ -22,6 +22,10 @@ type Wallet struct {
 	PublicKey  []byte
 }
 
+func GetChecksumLength() int {
+	return checksumLength
+}
+
 func (w *Wallet) Address() []byte {
 	publicHash := PublicKeyHash(w.PublicKey)
 
