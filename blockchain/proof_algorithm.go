@@ -28,7 +28,7 @@ func (proofOfWork *ProofOfWork) InitData(nounce int) []byte {
 	data := bytes.Join(
 		[][]byte{
 			proofOfWork.Block.PrevHash,
-			proofOfWork.Block.Data,
+			proofOfWork.Block.HashTransactions(),
 			ToHex(int64(nounce)),
 			ToHex(int64(Difficulty)),
 		},
